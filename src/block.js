@@ -70,7 +70,7 @@ let Blocks = [createGenesisBlock()]
 
 
 
-function getBlock(){
+function getBlocks(){
   return Blocks;
 }
 
@@ -172,17 +172,41 @@ function addBlock(data){
 
 
 function isVaildNewBlock(currentBlock,previousBlock){ 
-  // 1.타입검사:
+  // 1.Check {Header Datatype, Body Datatype} of currentBlock :
   if(!isVaildType(currentBlock)){
     console.log(`Invaild block structure ${JSON.stringify(currentBlock)}`)
     return false;
   }
-  // 2.
-  
+
+  // 2. Check index
+  if(previousBlock.header.index+1!==currentBlock.header.index){
+    console.log('invaild index')
+    return false 
+  }
+
+  // 3. Check previousHash
+  if(createHash(previousBlock)!==currentBlock.header.previousHash){
+    console.log('invaild previousBlock')
+    return false
+  }
+
+  // 4. Check Body
+  /*
+    currentBlock.header.merkleRoot = > body [array]
+
+
+    current.body -> merkelTree, merkleRoot -> result != current.header.merkleRoot
+    
+
+    body should be not null
+    => current.body.length !==0
+    
+  */
+  if(currentBlock.body.length === 0 || ( merkle('sha256').sync(currentBlock.body).root() !== currentBlock.header.merkleRoot)){
+    console.log('invaild merkleRoot')
+    return false; 
+  }
   return true
-  
-
-
 }
 
 function isVaildType(block){
@@ -200,12 +224,54 @@ function isVaildType(block){
 addBlock(['hi'])
 addBlock(['holla'])
 addBlock(['aloha'])
+console.log(Blocks.length)
+
+//제네시스 블럭이 유효한지? 데이터가 바뀐 적이 없는지.
+// blocks 모든 배열을 검사.
+
+function isVaildBlock(){
+  const Blocks = [...getBlocks()];
+  if(JSON.stringify(Blocks[0]) !== JSON.stringify(createGenesisBlock())){
+    console.log('Genesis error')
+    return false; 
+  }
+  
+  let tempBlocks=[Blocks[0]]
+  for(let i =1; i<Blocks.length; i++){
+    if(isVaildNewBlock(Blocks[i],tempBlocks[i-1])){
+      tempBlocks.push(Blocks[i])
+    }else{
+      return false; 
+    }
+  }
+
+  return true
+  
+}
 
 
-// 21228f4bf1
-// 04c87c690d
-// 92fbb4435d
-// 8646b89f78
-// 5f973eeea9
-// 2de7f2685a
-// 5204
+module.exports = {
+  getBlocks,
+  getLastBlock,
+  addBlock,
+  getVersion,
+}
+
+/*
+block chain 
+
+peer to peer
+
+프로나; 당나귀; 소리바다; 
+
+클라이언트- 서버 - http tcp 통신.
+websocket
+
+--지분증명
+--합의알고리즘
+---트랜잭션
+--- wait
+---Dapp 비슷하게
+
+
+*/
