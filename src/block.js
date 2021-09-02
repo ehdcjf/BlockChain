@@ -173,24 +173,33 @@ function addBlock(data){
 
 function isVaildNewBlock(currentBlock,previousBlock){ 
   // 1.타입검사:
-  isVaildType(currentBlock)
+  if(!isVaildType(currentBlock)){
+    console.log(`Invaild block structure ${JSON.stringify(currentBlock)}`)
+    return false;
+  }
+  // 2.
+  
   return true
   
-  // 2.
 
 
 }
 
 function isVaildType(block){
-  console.log(block)
-  return true; 
+  return (
+    typeof(block.header.version)=='string'&&
+    typeof(block.header.index)=='number'&&
+    typeof(block.header.previousHash)=='string'&&
+    typeof(block.header.time)=='number'&&
+    typeof(block.header.version)=='string'&&
+    typeof(block.body)=='object'
+    )
 }
 
 
 addBlock(['hi'])
 addBlock(['holla'])
 addBlock(['aloha'])
-console.log(Blocks); 
 
 
 // 21228f4bf1
