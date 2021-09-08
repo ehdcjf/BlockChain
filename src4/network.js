@@ -1,5 +1,5 @@
 const WebSocket = require('ws');
-const wsPORT = process.env.WS_PORT ||6005
+const wsPORT = process.env.WS_PORT ||6006
 const bc = require('./block.js');
 
 let sockets = [];

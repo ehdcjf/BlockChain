@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 const bodyParser = require('body-parser')
 const bc = require('./block.js')
  const ws = require('./network.js')
