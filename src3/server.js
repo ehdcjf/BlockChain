@@ -3,7 +3,8 @@ const app = express();
 const port = process.env.PORT || 3000
 const bodyParser = require('body-parser')
 const bc = require('./block.js')
- const ws = require('./network.js')
+const ws = require('./network.js')
+const wl = require('./wallet');
 
 app.use(bodyParser.json());
 
@@ -20,6 +21,7 @@ app.get("/version",(req,res)=>{
 // curl -X POST -H "Content-Type:application/json" -d "{\"data\":[\"Hello world\"]}" http://localhost:3000/mineBlock
 app.post("/mineBlock",(req,res)=>{
     const data = req.body.data 
+    console.log(req.body)
     const result = bc.mineBlock(data) // {} or false 
     if(result === null ) {
         //res.send(`mineBlock failed`)
@@ -51,7 +53,13 @@ app.get("/stop",(req,res)=>{
     process.exit(0)
 })
 
+app.get(`/address`,(req,res)=>{
+    const address = wl.getPublicFromWallet();
+    res.send({address});
+})
 
+
+wl.initWallet();
 ws.wsInit()
 app.listen(port,()=>{
     console.log(`server start port ${port}`)

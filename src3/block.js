@@ -127,7 +127,6 @@ function createBlock(data){
 
 ////==== 
 function findBlock(version,index,previousHash,time,merkleRoot,difficulty){
-  console.log(difficulty);
   let nonce = 0;
   while(true){
     let hash = createHeaderHash(version,index,previousHash,time,merkleRoot,difficulty,nonce)
